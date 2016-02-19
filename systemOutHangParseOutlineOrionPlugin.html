@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>SystemOut Hang Parse</title>
+<script type="text/javascript" src="plugin.js"></script>
+<script type="text/javascript" src="Deferred.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+
+//********************
+//********************
+//INSTRUCTIONS:
+//select a systemOut file in the Orion Editor then View-> Slideout -> SystemOut Hang Parse
+//********************
+//********************
+
+
+window.onload = function() {
+	var headers = { name: "SystemOut Hang parse", version: "1.0", description: "parse out hang and delay messages - macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+    	getOutline: function(contents,title) {
+    		var  systemOutOutline = [];
+    		var lines = contents.split("\n");
+    		
+    		var condensedString = "";
+    		
+    		for (var i=0; i < lines.length; i++) {   			
+    			var line = lines[i];
+    			
+    			var matchesStartDisplay = /^WebSphere/.exec(line); 
+    			if (matchesStartDisplay){
+    				var pid = line.split(' ').pop();
+    				  systemOutOutline.push({
+                		label: "PID:" +pid + " " + lines[i],
+                		line: i+1
+                	});  
+                	
+                continue;
+			    }
+
+
+    			    			
+//TRAS0017I #trace [4/29/15 6:56:09:650 EDT] 00000000 ManagerAdmin I TRAS0017I: The startup trace state is *=info.
+//WSVR0605W #hung [1/26/16 9:22:16:909 NZDT] 0003ebfb ThreadMonitor W   WSVR0605W: Thread "WebContainer : 364" (0003b646) has been active for 1036363 milliseconds and may be hung.  There is/are 1 thread(s) in total in the server that may be hung.
+//CWWSR0605W #hung
+//UTLS0008W #delayed  [7/12/13 18:14:38:494 IST] 00000072 AlarmThreadMo W   UTLS0008W: The return of alarm thread "Deferrable Alarm : 3" (00000048) to the alarm thread pool has been delayed for 10496 milliseconds. This may be preventing normal alarm function within the application server. The alarm listener stack trace is as follows:
+//WSVR0606W #completed
+//UTLS0009W #completed  [8/13/12 12:37:10:053 PDT] 0000003e AlarmThreadMo W UTLS0009W: Alarm Thread "Non-deferrable Alarm : 0" (0000003e) previously reported to be delayed has now completed.  It was active for approximately 43734 milliseconds.
+//CWWSR0606W #completed
+//WSVR0001I #open for e-business [9/15/11 8:42:11:727 CDT] 00000000 WsServerImpl A WSVR0001I: Server server1 open for e-business
+//WSVR0024I #server stopped [12/22/11 6:01:49:033 CST] 00000006 ServerCollabo A WSVR0024I: Server server1 stopped
+//WSVR0221I #app start  [12/22/11 6:01:49:033 CST] 00000006 ApplicationMg A WSVR0221I: Application started: [application_name]
+//WSVR0217I #app stopping [12/22/11 6:01:47:205 CST] 00000006 ApplicationMg A WSVR0217I: Stopping application: isclite
+//ADMN1020I #attempt stop [11/22/14 21:46:01:558 IST] 00000053 AdminHelper A ADMN1020I: An attempt is made to stop the server1 server. (User ID = defaultWIMFileBasedRealm/estore)
+//HMGR0152W #cpu starvation [10/25/05 16:42:27:635 EDT] 0000047a CoordinatorCo W HMGR0152W: CPU Starvation detected. Current thread scheduling delay is 9 seconds.
+//DCSV0004W #adequate CPU [10/25/05 16:42:27:635 EDT] 0000047a CoordinatorCo W DCSV0004W: DCS Stack DefaultCoreGroup at Member PCCell01\PCNode01\BPM751PDEV.AppTarget.PCMNode01.0: Did not receive adequate CPU time slice. Last known CPU usage time at 12:23:55:452 CST. Inactivity duration was 31 seconds.
+//CWOBJ7852W #Thread starvation detected [10/9/13 23:14:05:147 CDT] 0000000f XSThreadPool  W   CWOBJ7852W: Thread starvation detected.  Thread scheduling delay is 34377 ms. 
+//Too many open files/)
+//OutOfMemory
+
+    			
+    			if (/TRAS0017I/.exec(line)){
+				//[4/29/15 6:56:09:650 EDT] 00000000 ManagerAdmin I TRAS0017I: The startup trace state is *=info.
+				    condensedString = timeStamp(line)+" "+infoMessageCode(line)+" "+traceString(line);
+					systemOutOutline.push({
+	            		label: condensedString,//lines[i],
+	            		line: i+1
+	            	}); 
+	            	continue;
+				}
+				
+				if (/WSVR0001I/.exec(line) || /WSVR0024I/.exec(line) || /WSVR0221I/.exec(line) || /WSVR0217I/.exec(line)||/ADMN1020I/.exec(line)){
+				//[9/15/11 8:42:11:727 CDT] 00000000 WsServerImpl A WSVR0001I: Server server1 open for e-business
+				//[12/22/11 6:01:49:033 CST] 00000006 ServerCollabo A WSVR0024I: Server server1 stopped
+				//[12/22/11 6:01:49:033 CST] 00000006 ApplicationMg A WSVR0221I: Application started: [application_name]
+				//[12/22/11 6:01:47:205 CST] 00000006 ApplicationMg A WSVR0217I: Stopping application: isclite
+				//[11/22/14 21:46:01:558 IST] 00000053 AdminHelper A ADMN1020I: An attempt is made to stop the server1 server. (User ID = defaultWIMFileBasedRealm/estore)
+				    condensedString = timeStamp(line)+" "+adminMessageCode(line)+ line.split(':').pop() ;
+					systemOutOutline.push({
+	            		label: condensedString,//lines[i],
+	            		line: i+1
+	            	}); 
+	            	continue;
+				}
+    		 
+				if ((/WSVR0605W/.exec(line))||(/CWWSR0605W/.exec(line))){
+				//[1/26/16 9:22:16:909 NZDT] 0003ebfb ThreadMonitor W   WSVR0605W: Thread "WebContainer : 364" (0003b646) has been active for 1036363 milliseconds and may be hung.  There is/are 1 thread(s) in total in the server that may be hung.
+				    condensedString = timeStamp(line)+" "+warningMessageCode(line)+" "+threadName(line)+" hung? Delay: "+ ms(line);
+					systemOutOutline.push({
+	            		label: condensedString,//lines[i],
+	            		line: i+1
+	            	});
+	            	continue;
+				}
+				
+				if (/HMGR0152W/.exec(line)){
+				//[10/25/05 16:42:27:635 EDT] 0000047a CoordinatorCo W HMGR0152W: CPU Starvation detected. Current thread scheduling delay is 9 seconds.
+				    condensedString = timeStamp(line)+" "+warningMessageCode(line)+" starvation? Delay: "+ line.split('scheduling delay is ').pop();
+					systemOutOutline.push({
+	            		label: condensedString,//lines[i],
+	            		line: i+1
+	            	});
+	            	continue;
+				}
+				
+				if (/CWOBJ7852W/.exec(line)){
+				//[10/9/13 23:14:05:147 CDT] 0000000f XSThreadPool  W   CWOBJ7852W: Thread starvation detected.  Thread scheduling delay is 34377 ms. ;
+				   condensedString = timeStamp(line)+" "+warningMessageCode(line)+" starvation? Delay: " +  msToTime(getLastNumberFromString(line));
+					systemOutOutline.push({
+	            		label: condensedString,//lines[i],
+	            		line: i+1
+	            	});
+	            	continue;
+				}	
+				
+				if (/UTLS0008W/.exec(line)){
+				//[7/12/13 18:14:38:494 IST] 00000072 AlarmThreadMo W   UTLS0008W: The return of alarm thread "Deferrable Alarm : 3" (00000048) to the alarm thread pool has been delayed for 10496 milliseconds. This may be preventing normal alarm function within the application server. The alarm listener stack trace is as follows:
+				    condensedString = timeStamp(line)+" "+warningMessageCode(line)+threadName(line)+" Delay: " +  msToTime(getLastNumberFromString(line));
+					systemOutOutline.push({
+	            		label: condensedString,//lines[i],
+	            		line: i+1
+	            	});
+	            	continue;
+				}				
+				
+				if ((/WSVR0606W/.exec(line))||(/UTLS0009W/.exec(line))||(/CWWSR0606W/.exec(line))){
+				//[8/13/12 12:37:10:053 PDT] 0000003e AlarmThreadMo W UTLS0009W: Alarm Thread "Non-deferrable Alarm : 0" (0000003e) previously reported to be delayed has now completed.  It was active for approximately 43734 milliseconds.
+				    condensedString = timeStamp(line)+" "+warningMessageCode(line)+" "+threadName(line)+" completed. Active: "+ ms(line);
+					systemOutOutline.push({
+	            		label: condensedString,//lines[i],
+	            		line: i+1
+	            	}); 
+	            	continue;
+				}
+				
+				if (/DCSV0004W/.exec(line)){
+				//[10/25/05 16:42:27:635 EDT] 0000047a CoordinatorCo W DCSV0004W: DCS Stack DefaultCoreGroup at Member PCCell01\PCNode01\BPM751PDEV.AppTarget.PCMNode01.0: Did not receive adequate CPU time slice. Last known CPU usage time at 12:23:55:452 CST. Inactivity duration was 31 seconds.
+				  condensedString = timeStamp(line)+" "+warningMessageCode(line)+" Inactivity: "+ getLastNumberFromString(line) + " seconds";
+				  systemOutOutline.push({
+	            		label: condensedString,//lines[i],
+	            		line: i+1
+	            	});
+	            	continue;
+				}
+				
+				if (/Too many open files/i.exec(line)){
+				//[4/29/15 6:56:09:650 EDT] 00000000 ManagerAdmin I TRAS0017I: The startup trace state is *=info.
+				    condensedString = timeStamp(line)+" Too many open files";
+					systemOutOutline.push({
+	            		label: condensedString,//lines[i],
+	            		line: i+1
+	            	}); 
+	            	continue;
+				}
+				
+				if (/OutOfMemory/i.exec(line)){
+				//[4/29/15 6:56:09:650 EDT] 00000000 ManagerAdmin I TRAS0017I: The startup trace state is *=info.
+				    condensedString = timeStamp(line)+" OutOfMemory";
+					systemOutOutline.push({
+	            		label: condensedString,//lines[i],
+	            		line: i+1
+	            	}); 
+	            	continue;
+				}				
+				
+			
+    		 
+				
+		}//end of list loop
+
+
+function timeStamp(line){
+	return line.substr(0,line.indexOf("]")+1);	
+}
+
+function infoMessageCode(line){
+	var holdString = line.split(' I ').slice(1,2);  
+	return String(holdString).split(':').slice(0,1);	
+}
+
+function traceString(line){
+	return line.split(':').pop();
+}
+
+function warningMessageCode(line){
+	var holdString = line.split(' W ').slice(1,2);  
+	return String(holdString).split(':').slice(0,1);	
+}
+
+function adminMessageCode(line){
+	var holdString = line.split(' A ').slice(1,2);  
+	return String(holdString).split(':').slice(0,1);	
+}
+
+function ms(line){	
+	var holdString = line.split(' milliseconds').slice(0,1);
+	holdString = String(holdString).split(' ').pop().trim();
+	//window.alert("ms before" + holdString);
+	return msToTime(holdString);
+}
+
+function msToTime(ms){
+	//window.alert("ms: " + ms);
+	ms = parseFloat(ms);
+	//parseFloat(Math.round(num3 * 100) / 100).toFixed(2);
+	var s = parseFloat((ms / 1000) % 60).toFixed(2);
+	//window.alert("s: " + s);
+	//var m = (ms / (1000 * 60)) % 60;
+	var m = parseFloat((ms / (1000 * 60)) % 60).toFixed(0);
+	//var h = (ms / (1000 * 60 * 60)) % 24;
+	var h = parseFloat((ms / (1000 * 60 * 60)) % 24).toFixed(0);
+    return "("+h+"h:"+m+"m:"+s+"s)";
+	//return s;
+}
+
+function threadName(line){
+	return line.split('\"').slice(1,2);
+}
+
+function getLastNumberFromString(line){
+	var lastNumber;	
+	var numbersInString;
+	var reAllNumbersFoundInTheString = /\b\d+\b/g;
+	while ((numbersInString = reAllNumbersFoundInTheString.exec(line)) !== null){
+		lastNumber = numbersInString[0];
+		reAllNumbersFoundInTheString.lastIndex;
+	}
+	return lastNumber;
+}
+
+			
+    		//window.alert(title + "\n\n" + sytemOutOutline);
+	       return systemOutOutline;
+	    }  	    
+	};
+	
+	var serviceProperties = {
+		contentType: ["text/plain"],
+      	name: "SystemOut Hang Parse",
+      	id: "orion.outliner.systemOutHangParse"
+    };	
+    	
+	
+	provider.registerServiceProvider("orion.edit.outliner",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+[1/26/16 9:22:16:909 NZDT] 0003ebfb ThreadMonitor W   WSVR0605W: Thread "WebContainer : 364" (0003b646) has been active for 1036363 milliseconds and may be hung.  There is/are 1 thread(s) in total in the server that may be hung.
+</body>
+</html>
+

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Javacore Summary Outline Orion Plugin</title>
+<script type="text/javascript" src="plugin.js"></script>
+<script type="text/javascript" src="Deferred.js"></script>
+<script type="text/javascript" src="javacoreSummary.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+
+//********************
+//********************
+//INSTRUCTIONS:
+//select a javacore*.txt file in the Orion Editor then View-> Slideout -> Javacore Summary
+//********************
+//********************
+
+
+window.onload = function() {
+	var headers = { name: "Javacore Summary Outline", version: "1.0", description: "View -> Slideout - parse javacore for general overview - macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+	    getOutline: function(contents,title) {	    	
+	    	return getJavacoreSummaryOutline(contents);    //returns an object outline{label: text, line: number }		
+		}
+	};
+		
+	var serviceProperties = {
+		contentType: ["text/plain"],
+	  	name: "Javacore Summary Outline",
+	  	id: "orion.outliner.javacoreSummary"
+	};		
+	
+	provider.registerServiceProvider("orion.edit.outliner",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+</body>
+</html>

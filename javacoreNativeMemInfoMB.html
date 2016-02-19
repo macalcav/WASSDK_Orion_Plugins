@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8" />
+      <title>NATIVEMEMINFO_MB</title>
+      <script src="plugin.js"></script>
+      <script type="text/javascript">
+
+          var headers = { name: "NATIVEMEMINFO_MB", version: "1.0", description: "Convert NATIVEMEMINFO to MB - macalcav@us.ibm.com - WASSDK" };
+          var provider = new orion.PluginProvider(headers);
+          var serviceImpl = {
+                  run: function (selectedText, textString, selection) {
+                  	var lines = textString.split("\n");
+                  	var numLines = lines.length;
+                  	var parsedDataString="";
+                    for (var i = 0; i < numLines; i++) {
+                    	if (/NATIVEMEMINFO/.exec(lines[i])) {//0SECTION       NATIVEMEMINFO subcomponent dump routine
+                    	    lines[i] = String(lines[i]).replace(/\s\s+/g, ' ');
+                    	    parsedDataString=parsedDataString+lines[i].substring(lines[i].indexOf(" "));
+                	    }
+                    	else if (/(MEMUSER).+?(allocation)/.exec(lines[i])){//2MEMUSER       +--VM: 1,273,041,588 bytes / 9666 allocations
+                    		//lines[i]=lines[i].replace(/\s\s+/g, ' ');//consolidate spaces
+                    		var indexOfFirstSpace = lines[i].indexOf(" ");
+                    		var indexOfColon = lines[i].indexOf(":");
+                    		var indexOfBytes = lines[i].indexOf(" bytes");
+                    		var byteValue=lines[i].substring(indexOfColon+2,indexOfBytes);//grab the byte value consider space after colon
+                    		byteValue=byteValue.replace(/\,/g,'');//remove commas
+                    		//window.alert("Lines i = "+ lines[i]);
+                    		parsedDataString=parsedDataString+lines[i].substring(indexOfFirstSpace, indexOfColon+2)+" "+ (byteValue/1024/1024).toFixed(2) + "mb\n";
+                    	}
+                    }
+                    return parsedDataString;
+                    }
+                };
+
+
+
+          var serviceProperties = {
+                  name: "NATIVEMEMINFO_MB",
+		          contentType: ["text/plain"],                  
+                  key: ["n", true, true] // Ctrl+Shift+n
+          };
+          provider.registerService("orion.edit.command", serviceImpl, serviceProperties);
+          provider.connect();
+
+</script>
+
+    </head>
+    <body></body>
+    </html>
+   
