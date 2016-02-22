@@ -246,11 +246,20 @@ function getJavacoreSummaryOutline(contents) {
 				});
 				continue;
 			}
-			if (/1STHEAPTOTAL/.exec(line)||/1STSEGTOTAL/.exec(line)||/1STSEGINUSE/.exec(line)||/1STSEGFREE/.exec(line)||/1STHEAPINUSE/.exec(line)||/1STHEAPFREE/.exec(line)) {//1STSEGTOTAL    Total memory:                    46759936 (0x0000000002C98000)
+			if (/1STHEAPTOTAL/.exec(line)||/1STSEGTOTAL/.exec(line)||/1STSEGINUSE/.exec(line)||/1STSEGFREE/.exec(line)||/1STHEAPINUSE/.exec(line)||/1STHEAPFREE/.exec(line)) {
+				//1STSEGTOTAL    Total memory:                    46759936 (0x0000000002C98000)
+				//or 
+				//1STHEAPFREE    Bytes of Heap Space Free: 8cfa600
 				var memory = String(lines[i]).replace(/\s\s+/g, ' ');//consolidate spaces
-				memory = / (.*?)( \()/.exec(memory);//everything between the first space and the first parenthesis
 				var reAllNumbersFoundInTheString = /\b\d+\b/g;//regular expression to get all the numbers from a string
-				memory = memory[1]  + " = " + decToMb(reAllNumbersFoundInTheString.exec(lines[i]));//since the memory value is the first number in this string
+				if (/\(/.exec(memory)){
+					memory = / (.*?)( \()/.exec(memory);//everything between the first space and the first parenthesis
+					memory = memory[1]  + " = " + decToMb(reAllNumbersFoundInTheString.exec(lines[i]));//since the memory value is the first number in this string
+				}else{
+					var decValue = hextToDec(memory.substr(memory.indexOf(":")).trim);
+					memory = memory.substr(0, memory.indexOf(":")+ 1) + "=" + decToMb(decValue) ;	
+				}
+				
 				outline.push({
 					label: memory,
 					line: i+1  
@@ -447,11 +456,20 @@ function getJavacoreSummaryText(text){
 				summary+=("\n-------------");
 				continue;
 			}
-			if (/1STHEAPTOTAL/.exec(line)||/1STSEGTOTAL/.exec(line)||/1STSEGINUSE/.exec(line)||/1STSEGFREE/.exec(line)||/1STHEAPINUSE/.exec(line)||/1STHEAPFREE/.exec(line)) {//1STSEGTOTAL    Total memory:                    46759936 (0x0000000002C98000)
+			if (/1STHEAPTOTAL/.exec(line)||/1STSEGTOTAL/.exec(line)||/1STSEGINUSE/.exec(line)||/1STSEGFREE/.exec(line)||/1STHEAPINUSE/.exec(line)||/1STHEAPFREE/.exec(line)) {
+				//1STSEGTOTAL    Total memory:                    46759936 (0x0000000002C98000)
+				//or 
+				//1STHEAPFREE    Bytes of Heap Space Free: 8cfa600
 				var memory = String(lines[i]).replace(/\s\s+/g, ' ');//remove extra spaces
-				memory = / (.*?)( \()/.exec(memory);//everything between the first space and the first parenthesis
-				var reAllNumbersFoundInTheString = /\b\d+\b/g;//regular expression to get all the numbers from a string
-				memory = memory[1]  + " = " + decToMb(reAllNumbersFoundInTheString.exec(lines[i]));//since the memory value is the first number in this string
+				if /\(/.exec(memory){
+					memory = / (.*?)( \()/.exec(memory);//everything between the first space and the first parenthesis
+					var reAllNumbersFoundInTheString = /\b\d+\b/g;//regular expression to get all the numbers from a string
+					memory = memory[1]  + " = " + decToMb(reAllNumbersFoundInTheString.exec(lines[i]));//since the memory value is the first number in this string	
+				}else{
+					var decValue = hextToDec(memory.substr(memory.indexOf(":")).trim);
+					memory = memory.substr(0, memory.indexOf(":")+ 1) + "=" + decToMb(decValue) ;	
+					}
+				
 				summary+=("\n"+	memory);
 				continue;
 			}
@@ -479,4 +497,8 @@ function getJavacoreSummaryText(text){
 function decToMb(dec){
 	dec = parseFloat(dec);
 	return (dec/1024/1024).toFixed(2)+"MB";
+}
+
+function hexToDec(hex){
+	return = parseInt(hex, 16);
 }
