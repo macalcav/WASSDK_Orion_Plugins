@@ -24,7 +24,7 @@ window.onload = function() {
 	var serviceImpl = {
 	    run: function(selectedText, text, selection) {
 	    	  	return {
-	    	  		     text: "Javacore Summary\n*****************\n"+ javacoreSummary.getJavacoreSummaryText(text) +"\nJavacore Summary End\n*******************\n\n"+text,
+	    	  		     text: "Javacore Summary\n*****************\n"+ getJavacoreSummaryText(text) +"\nJavacore Summary End\n*******************\n\n"+text,
 	    	  		selection:{start:0, end:0}
 	    	  	};
 		}
