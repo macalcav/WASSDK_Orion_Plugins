@@ -1,8 +1,7 @@
 /**
  * http://usejsdoc.org/
  */
-
-//var columnify = require('columnify');
+//var columnify = require('columnify/');
 /*globals columnify */
 function makeVmstatKeyValuePairs (textToColumnize) {
 	var lines = textToColumnize.split("\n");
@@ -33,5 +32,7 @@ function makeVmstatKeyValuePairs (textToColumnize) {
 
 	
 function vmstatColumnize(text){
-	columnify(makeVmstatKeyValuePairs(text), {align: 'right'});
+	var columns = columnify(makeVmstatKeyValuePairs(text),{align: 'right'});
+	//columnify(makeVmstatKeyValuePairs(text), {align: 'right'});
+	return columns;
 };
