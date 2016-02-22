@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>DecToGb Convert</title>
+<script type="text/javascript" src="plugin.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+
+//********************
+//********************
+//INSTRUCTIONS:
+//highlight text to convert
+//********************
+//********************
+
+
+window.onload = function() {
+	var headers = { name: "Dec to GB Convert", version: "1.0", description: "TOOLS - convert dec to GB - macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+	    run: function(dec) {
+	    	dec = dec.replace(/\,/g,'');
+	    	dec = parseFloat(dec);
+	        return dec +"="+ (dec/1024/1024/1024).toFixed(2)+"GB";
+		}
+	};
+		
+	var serviceProperties = {
+		contentType: ["text/plain"],
+	  	name: "DecToGb",
+	  	id: "orion.edit.decToGb",
+	  	img : "/images/gear.gif",
+	  	key : [ "g", true ]
+	};		
+	
+	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+</body>
+</html>
