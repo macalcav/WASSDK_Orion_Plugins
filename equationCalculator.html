@@ -21,7 +21,7 @@ window.onload = function() {
 	var provider = new orion.PluginProvider(headers);		
 	var serviceImpl = {
 	    run: function(equation) {
-	    	return String(equation) + "=" + parseFloat(equation).toFixed(2);
+	    	return String(equation) + "=" + parseFloat(eval(equation)).toFixed(2);
 		}
 	};
 		
