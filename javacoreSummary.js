@@ -256,7 +256,7 @@ function getJavacoreSummaryOutline(contents) {
 					memory = / (.*?)( \()/.exec(memory);//everything between the first space and the first parenthesis
 					memory = memory[1]  + " = " + decToMb(reAllNumbersFoundInTheString.exec(lines[i]));//since the memory value is the first number in this string
 				}else{
-					var decValue = hextToDec(memory.substr(memory.indexOf(":")).trim);
+					var decValue = hexToDec(memory.substr(memory.indexOf(":")).trim());
 					memory = memory.substr(0, memory.indexOf(":")+ 1) + "=" + decToMb(decValue) ;	
 				}
 				
@@ -461,12 +461,12 @@ function getJavacoreSummaryText(text){
 				//or 
 				//1STHEAPFREE    Bytes of Heap Space Free: 8cfa600
 				var memory = String(lines[i]).replace(/\s\s+/g, ' ');//remove extra spaces
-				if /\(/.exec(memory){
+				if (/\(/.exec(memory)){
 					memory = / (.*?)( \()/.exec(memory);//everything between the first space and the first parenthesis
 					var reAllNumbersFoundInTheString = /\b\d+\b/g;//regular expression to get all the numbers from a string
 					memory = memory[1]  + " = " + decToMb(reAllNumbersFoundInTheString.exec(lines[i]));//since the memory value is the first number in this string	
 				}else{
-					var decValue = hextToDec(memory.substr(memory.indexOf(":")).trim);
+					var decValue = hexToDec(memory.substr(memory.indexOf(":")).trim());
 					memory = memory.substr(0, memory.indexOf(":")+ 1) + "=" + decToMb(decValue) ;	
 					}
 				
@@ -500,5 +500,5 @@ function decToMb(dec){
 }
 
 function hexToDec(hex){
-	return = parseInt(hex, 16);
+	return parseInt(hex, 16);
 }
