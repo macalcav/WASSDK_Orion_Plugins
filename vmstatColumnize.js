@@ -1,8 +1,7 @@
 /**
  * http://usejsdoc.org/
  */
-//var columnify = require('columnify/');
-/*globals columnify */
+/*eslint-env node */
 function makeVmstatKeyValuePairs (textToColumnize) {
 	var lines = textToColumnize.split("\n");
 	var numLines = lines.length;
@@ -17,7 +16,6 @@ function makeVmstatKeyValuePairs (textToColumnize) {
 		else if (typeof key !== 'undefined'){//the key is already created
 			var values = lines[i].split(" ");
 			if (!isNaN(parseFloat(values[0])) && isFinite(values[0])){
-			//if (isFinite(values[0])){
 				var keyValue = [];
 				for (var j = 0; j < values.length; j++) {
 					keyValue[ key[j] ] = parseInt(values[j]);
@@ -32,6 +30,7 @@ function makeVmstatKeyValuePairs (textToColumnize) {
 
 	
 function vmstatColumnize(text){
+	var columnify = require('columnify');
 	var columns = columnify(makeVmstatKeyValuePairs(text),{align: 'right'});
 	//columnify(makeVmstatKeyValuePairs(text), {align: 'right'});
 	return columns;
