@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Inline Equation Calculator</title>
+<script type="text/javascript" src="plugin.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+
+//********************
+//********************
+//INSTRUCTIONS:
+//highlight text to calculate -> highlight "1+1" -> returns "1+1=2"
+//********************
+//********************
+
+
+window.onload = function() {
+	var headers = { name: "Inline Equation Calculator", version: "1.0", description: "TOOLS - Calculate an equation inline 1+1->1+1=2  - macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+	    run: function(equation) {
+	    	return String(equation) + "=" + parseFloat(equation).toFixed(2);
+		}
+	};
+		
+	var serviceProperties = {
+		contentType: ["text/plain"],
+	  	name: "Equation Calculator",
+	  	id: "orion.edit.equationCalculator",
+	  	key : [ "c", true ]
+	};		
+	
+	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+</body>
+</html>
