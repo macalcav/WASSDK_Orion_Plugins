@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Vmstat Columnizer</title>
 <script type="text/javascript" src="plugin.js"></script>
-<script type="text/javascript" src="vmstatColumnize.js"></script>
+<script type="text/javascript" src="./columnify"></script>
 <script>
 /*eslint-env browser, amd*/
 /*global orion*/	
@@ -28,6 +28,36 @@ window.onload = function() {
 	    	  	};
 		}
 	};
+	
+	function vmstatColumnize(text){
+		return columnify(makeVmstatKeyValuePairs(text),{align: 'right'});
+	}
+	
+	function makeVmstatKeyValuePairs (textToColumnize) {
+		var lines = textToColumnize.split("\n");
+		var numLines = lines.length;
+		var key;
+		var keyValuePairs= [];
+		for (var i = 0; i < numLines; i++) {
+			lines[i]=lines[i].replace(/^\s+|\s+$/gm,'');//remove white space from both ends
+			lines[i]=lines[i].replace(/\s\s+/g, ' ');//remove multiple spaces
+			if (lines[i].indexOf("r b ")>-1){//"r  b   avm   fre  ...
+				key=lines[i].split(" ");
+			}
+			else if (typeof key !== 'undefined'){//the key is already created
+				var values = lines[i].split(" ");
+				if (!isNaN(parseFloat(values[0])) && isFinite(values[0])){
+					var keyValue = [];
+					for (var j = 0; j < values.length; j++) {
+						keyValue[ key[j] ] = parseInt(values[j]);
+					}	
+					keyValuePairs.push(keyValue);
+				}
+			}
+		}	
+	return keyValuePairs;
+	}
+
 		
 	var serviceProperties = {
 		contentType: ["text/plain"],
