@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Vmstat Columnizer</title>
+<script type="text/javascript" src="plugin.js"></script>
+<script type="text/javascript" src="vmstatColumnize.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+
+//********************
+//********************
+//INSTRUCTIONS:
+//select a vmstat file -> Tools ->Vmstat Columnizer
+//********************
+//********************
+
+
+window.onload = function() {
+	var headers = { name: "Vmstat Columnizer", version: "1.0", description: "TOOLS -> Vmstat Columnizer -- places vmstat data into columns for readability macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+	    run: function(selectedText, text, selection) {
+	    	  	return {
+	    	  		     text: vmstatColumnize(text),
+	    	  		selection:{start:0, end:0}
+	    	  	};
+		}
+	};
+		
+	var serviceProperties = {
+		contentType: ["text/plain"],
+	  	name: "Vmstat Columnizer",
+	  	id: "orion.edit.vmstatColumnizer",
+	  	key : [ "v", true ]
+	};		
+	
+	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+</body>
+</html>
+
+/*
+ *  contentType: ["application/javascript"],
+ run : function(selectedText, text, selection) {
+   return 
+    {text: text.substring(0,selection.start) + "/*" + 
+           text.substring(selection.start,selection.end) + "*/" + 
+           text.substring(selection.end),
+     selection: {start:selection.start,end:selection.end+4}};
+ }
+
+ */
