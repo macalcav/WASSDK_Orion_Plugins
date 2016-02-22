@@ -30,6 +30,7 @@ window.onload = function() {
 	};
 	
 	function vmstatColumnize(text){
+		var columnify = require('columnify');
 		return columnify(makeVmstatKeyValuePairs(text),{align: 'right'});
 	}
 	
