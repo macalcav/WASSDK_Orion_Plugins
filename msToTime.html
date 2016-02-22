@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>MsToTime Convert</title>
+<script type="text/javascript" src="plugin.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+
+//********************
+//********************
+//INSTRUCTIONS:
+//highlight ms to convert
+//********************
+//********************
+
+
+window.onload = function() {
+	var headers = { name: "Millisecond to Time Convert", version: "1.0", description: "TOOLS -> MsToTime -- convert ms to hh:mm:ss - macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+	    run: function(ms) {
+			ms = parseFloat(ms);
+			var s = parseFloat((ms / 1000) % 60).toFixed(2);
+			var m = parseFloat((ms / (1000 * 60)) % 60).toFixed(0);
+			var h = parseFloat((ms / (1000 * 60 * 60)) % 24).toFixed(0);
+		    return "("+h+"h:"+m+"m:"+s+"s)";
+		}
+	};
+		
+	var serviceProperties = {
+		contentType: ["text/plain"],
+	  	name: "MsToTime",
+	  	id: "orion.edit.msToTime",
+	  	img : "clock.gif",
+	  	key : [ "t", true ]
+	};		
+	
+	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+</body>
+</html>
