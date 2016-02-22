@@ -258,8 +258,11 @@ function getJavacoreSummaryOutline(contents) {
 				}else{//1STHEAPFREE    Bytes of Heap Space Free: 8cfa600
 					var decValue = hexToDec(memory.substr(memory.indexOf(":")+1).trim());
 					memory = memory.substr(memory.indexOf(" "), memory.indexOf(":")+ 1) + "=" + decToMb(decValue) ;	
+					outline.push({
+						label: " ",
+						line: i+1  
+					});
 				}
-				
 				outline.push({
 					label: memory,
 					line: i+1  
@@ -464,7 +467,7 @@ function getJavacoreSummaryText(text){
 					memory = memory[1]  + " = " + decToMb(reAllNumbersFoundInTheString.exec(lines[i]));//since the memory value is the first number in this string	
 				}else{//1STHEAPFREE    Bytes of Heap Space Free: 8cfa600
 					var decValue = hexToDec(memory.substr(memory.indexOf(":")+1).trim());
-					memory = memory.substr(0, memory.indexOf(":")+ 1) + "=" + decToMb(decValue) ;	
+					memory = "\n"+ memory.substr( memory.indexOf(" ")+ 1, memory.indexOf(":")+ 1) + "=" + decToMb(decValue) ;	
 					}
 				
 				summary+=("\n"+	memory);
