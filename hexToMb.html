@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>HexToMb Convert</title>
+<script type="text/javascript" src="plugin.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+
+//********************
+//********************
+//INSTRUCTIONS:
+//highlight text to convert
+//********************
+//********************
+
+
+window.onload = function() {
+	var headers = { name: "Hex to MB Convert", version: "1.0", description: "TOOLS - convert Hex to MB - macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+	    run: function(hex) {
+	    	var hexToDec= parseInt(hex, 16);
+	    	return hex + "=" + (hexToDec/1024/1024).toFixed(2)+"MB";
+		}
+	};
+		
+	var serviceProperties = {
+		contentType: ["text/plain"],
+	  	name: "HexToMb",
+	  	id: "orion.edit.HexToMb",
+	  	key : [ "y", true ]
+	};		
+	
+	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+</body>
+</html>
