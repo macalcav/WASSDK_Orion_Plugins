@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Vmstat Columnizer</title>
 <script type="text/javascript" src="plugin.js"></script>
-<script type="text/javascript" src="columnify"></script>
+<script type="text/javascript" src="require.js"></script>
 <script>
 /*eslint-env browser, amd*/
 /*global orion*/	
@@ -18,7 +18,6 @@
 
 
 window.onload = function() {
-	var columnify = require('columnify');
 	
 	var headers = { name: "Vmstat Columnizer", version: "1.0", description: "TOOLS -> Vmstat Columnizer -- places vmstat data into columns for readability macalcav@us.ibm.com - WASSDK" };
 	var provider = new orion.PluginProvider(headers);		
@@ -32,6 +31,7 @@ window.onload = function() {
 	};
 	
 	function vmstatColumnize(text){
+		var columnify = require('columnify');
 		return columnify(makeVmstatKeyValuePairs(text),{align: 'right'});
 	}
 	
