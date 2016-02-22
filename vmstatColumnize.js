@@ -30,7 +30,7 @@ function makeVmstatKeyValuePairs (textToColumnize) {
 
 	
 function vmstatColumnize(text){
-	var columnify = require('columnify');
+	var columnify = require('./');
 	var columns = columnify(makeVmstatKeyValuePairs(text),{align: 'right'});
 	//columnify(makeVmstatKeyValuePairs(text), {align: 'right'});
 	return columns;
