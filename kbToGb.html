@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>KbToGb Convert</title>
+<script type="text/javascript" src="plugin.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+
+//********************
+//********************
+//INSTRUCTIONS:
+//highlight text to convert
+//********************
+//********************
+
+
+window.onload = function() {
+	var headers = { name: "Kb to GB Convert", version: "1.0", description: "TOOLS - convert kb to GB - macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+	    run: function(kb) {
+	    	kb = kb.replace(/\,/g,'');
+	    	kb = parseFloat(kb);
+	        return kb +"="+ (kb/1024/1024).toFixed(2)+"GB";
+		}
+	};
+		
+	var serviceProperties = {
+		contentType: ["text/plain"],
+	  	name: "KbToGb",
+	  	id: "orion.edit.kbToGb",
+	  	img : "/images/gear.gif",
+	  	key : [ "k", true ]
+	};		
+	
+	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+</body>
+</html>
