@@ -13,13 +13,13 @@
 //********************
 //********************
 //INSTRUCTIONS:
-//select a javacore*.txt file in the Orion Editor then View-> Slideout -> Javacore Summary
+//select a javacore*.txt file in the Orion Editor then View-> Slideout -> Javacore Summary Outline
 //********************
 //********************
 
 
 window.onload = function() {
-	var headers = { name: "Javacore Summary Outline", version: "1.0", description: "View -> Slideout - parse javacore for general overview - macalcav@us.ibm.com - WASSDK" };
+	var headers = { name: "Javacore Summary Outline", version: "1.0", description: "View -> Slideout -> Javacore Summary Outline -- parse javacore for general overview - macalcav@us.ibm.com - WASSDK" };
 	var provider = new orion.PluginProvider(headers);		
 	var serviceImpl = {
 	    getOutline: function(contents,title) {	    	
@@ -30,7 +30,7 @@ window.onload = function() {
 	var serviceProperties = {
 		contentType: ["text/plain"],
 	  	name: "Javacore Summary Outline",
-	  	id: "orion.outliner.javacoreSummary"
+	  	id: "orion.outliner.javacoreSummaryOutline"
 	};		
 	
 	provider.registerServiceProvider("orion.edit.outliner",serviceImpl, serviceProperties);
