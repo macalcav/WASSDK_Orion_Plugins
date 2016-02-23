@@ -3,9 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Vmstat Columnizer</title>
-<script type="text/javascript" src="plugin.js"></script>
-<script type="text/javascript" src="require.js"></script>
-<script type="text/javascript" src="columnify"></script>
+<script type="text/javascript" src="utilities/plugin.js"></script>
 <script>
 /*eslint-env browser, amd*/
 /*global orion*/	
@@ -19,49 +17,109 @@
 
 
 window.onload = function() {
-	
+
 	var headers = { name: "Vmstat Columnizer", version: "1.0", description: "TOOLS -> Vmstat Columnizer -- places vmstat data into columns for readability macalcav@us.ibm.com - WASSDK" };
 	var provider = new orion.PluginProvider(headers);		
 	var serviceImpl = {
-	    run: function(selectedText, text, selection) {
+	    run: function(selectedText, text, selection) {    	
 	    	  	return {
-	    	  		     text: vmstatColumnize(text),
+	    	  		     text: makeColumns(text),
 	    	  		selection:{start:0, end:0}
 	    	  	};
 		}
 	};
 	
-	function vmstatColumnize(text){
-		var columnify = require('columnify');
-		return columnify(makeVmstatKeyValuePairs(text),{align: 'right'});
-	}
-	
-	function makeVmstatKeyValuePairs (textToColumnize) {
-		var lines = textToColumnize.split("\n");
-		var numLines = lines.length;
-		var key;
-		var keyValuePairs= [];
-		for (var i = 0; i < numLines; i++) {
+	function getTopOfVmstatData(text){
+		var topOfVmstatData="";
+		var values;
+		var lines = text.split("\n");
+		for (var i = 0; i < lines.length; i++) {
 			lines[i]=lines[i].replace(/^\s+|\s+$/gm,'');//remove white space from both ends
 			lines[i]=lines[i].replace(/\s\s+/g, ' ');//remove multiple spaces
-			if (lines[i].indexOf("r b ")>-1){//"r  b   avm   fre  ...
-				key=lines[i].split(" ");
+			values = lines[i].split(" ");
+			if ((!isNaN(parseFloat(values[0])) && isFinite(values[0]))||(/^r b/.exec(lines[i]))){
+				break;
 			}
-			else if (typeof key !== 'undefined'){//the key is already created
-				var values = lines[i].split(" ");
-				if (!isNaN(parseFloat(values[0])) && isFinite(values[0])){
-					var keyValue = [];
-					for (var j = 0; j < values.length; j++) {
-						keyValue[ key[j] ] = parseInt(values[j]);
-					}	
-					keyValuePairs.push(keyValue);
+			else {
+				topOfVmstatData+=lines[i]+"\n";
+			}			
+		}
+		return topOfVmstatData;
+	}
+	
+	function getHeadings(text){
+		var columnHeadings=[];
+		var width = getLongestLength(text);
+		var lines = text.split("\n");
+		for (var i = 0; i < lines.length; i++) {
+			lines[i]=lines[i].replace(/^\s+|\s+$/gm,'');//remove white space from both ends
+			lines[i]=lines[i].replace(/\s\s+/g, ' ');//remove multiple spaces
+			if (/^r b/.exec(lines[i])){//"r  b   avm   fre  ...
+				columnHeadings=lines[i].split(" ");
+				break;
+			}
+		}		
+		var headerString="";
+		for (var x=0; x<columnHeadings.length;x++){
+			var w = parseInt(width[x]);
+			var v = parseInt(columnHeadings[x].length);
+			var pad = w-v;
+			var spaces = "";
+			for (var z=0; z<=pad;z++){
+				spaces+=" ";						
+			}
+			headerString+=spaces+columnHeadings[x];
+		}
+		return headerString+"\n";	
+	}
+	
+	function getLongestLength(text){
+		var width=[];
+		var lines = text.split("\n");
+		for (var i = 0; i < lines.length; i++) {
+			lines[i]=lines[i].replace(/^\s+|\s+$/gm,'');//remove white space from both ends
+			lines[i]=lines[i].replace(/\s\s+/g, ' ');//remove multiple spaces
+			values = lines[i].split(" ");
+			if ((!isNaN(parseFloat(values[0])) && isFinite(values[0]))|| (/^r b/.exec(lines[i]))){//"r  b   avm   fre  ...{//numeric
+				for (var x=0; x<values.length;x++){
+					if (isNaN(parseInt(width[x]))){//if width is not set yet, set to zero
+						width[x]=0;
+					}
+					if (values[x].length > width[x]){
+						width[x]=values[x].length;
+					}
 				}
 			}
-		}	
-	return keyValuePairs;
+		}
+		return width;
 	}
-
-		
+	
+	function makeColumns(text){
+		var width = getLongestLength(text);
+		var output=getTopOfVmstatData(text)+getHeadings(text);
+		var lines = text.split("\n");
+		for (var i = 0; i < lines.length; i++) {
+			lines[i]=lines[i].replace(/^\s+|\s+$/gm,'');//remove white space from both ends
+			lines[i]=lines[i].replace(/\s\s+/g, ' ');//remove multiple spaces
+			values = lines[i].split(" ");
+			if (!isNaN(parseFloat(values[0])) && isFinite(values[0])){//numeric
+				for (var x=0; x<values.length;x++){
+					var w = parseInt(width[x]);
+					var v = parseInt(values[x].length);
+					var pad = w-v;
+					//window.alert(w);
+					var spaces = "";
+					for (var z=0; z<=pad;z++){
+						spaces+=" ";						
+					}
+					output+=spaces+values[x];
+				}
+				output+="\n";
+			}
+		}
+		return output;
+	}
+	
 	var serviceProperties = {
 		contentType: ["text/plain"],
 	  	name: "Vmstat Columnizer",
