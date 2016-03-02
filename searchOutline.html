@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Search Outline</title>
+<script type="text/javascript" src="utilities/plugin.js"></script>
+<script type="text/javascript" src="utilities/Deferred.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+
+//********************
+//********************
+//INSTRUCTIONS:
+//Orion Editor then View-> Slideout -> Search Outline
+//********************
+//********************
+
+
+window.onload = function() {
+	var headers = { name: "Search Outline", version: "1.0", description: "View -> Slideout -> Search Outline -- parse file for general overview - macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+    	getOutline: function(contents,title) {
+			return getSearchOutline(contents);    //returns an object outline{label: text, line: number }		
+		}
+	};
+	
+	function getSearchOutline(contents){    		
+    	var outline = [];
+		var lines = contents.split(/\r?\n/);
+		var line;
+		var i;
+		for (i=0; i < lines.length; i++) {
+				line = lines[i];
+				//if (line.indexOf(selectedText)){
+					outline.push({
+					label: line,
+					line: i+1  
+					});						
+				//}								
+		}
+		return outline;
+	};
+		
+	var serviceProperties = {
+		contentType: ["text/plain"],
+	  	name: "Search Outline",
+	  	id: "orion.outline.searchOutline",
+	  	pattern: "*.txt"
+	};		
+	
+	provider.registerServiceProvider("orion.edit.outliner",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+</body>
+</html>
