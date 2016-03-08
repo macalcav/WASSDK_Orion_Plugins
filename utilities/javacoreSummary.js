@@ -249,7 +249,7 @@ function getJavacoreSummaryOutline(contents) {
 				});
 				continue;
 			}
-			if (/1STHEAPTOTAL/.exec(line)||/1STSEGTOTAL/.exec(line)||/1STSEGINUSE/.exec(line)||/1STSEGFREE/.exec(line)||/1STHEAPINUSE/.exec(line)||/1STHEAPFREE/.exec(line)) {				
+			if (/1STHEAPALLOC/.exec(line)||/1STHEAPTOTAL/.exec(line)||/1STSEGTOTAL/.exec(line)||/1STSEGINUSE/.exec(line)||/1STSEGFREE/.exec(line)||/1STHEAPINUSE/.exec(line)||/1STHEAPFREE/.exec(line)) {				
 				var memory = String(lines[i]).replace(/\s\s+/g, ' ');//consolidate spaces
 				if (/\(/.exec(memory)){//1STSEGTOTAL    Total memory:                    46759936 (0x0000000002C98000)
 					var reAllNumbersFoundInTheString = /\b\d+\b/g;//regular expression to get all the numbers from a string
@@ -459,7 +459,7 @@ function getJavacoreSummaryText(text){
 				summary+=("\n-------------");
 				continue;
 			}
-			if (/1STHEAPTOTAL/.exec(line)||/1STSEGTOTAL/.exec(line)||/1STSEGINUSE/.exec(line)||/1STSEGFREE/.exec(line)||/1STHEAPINUSE/.exec(line)||/1STHEAPFREE/.exec(line)) {
+			if (/1STHEAPALLOC/.exec(line)||/1STHEAPTOTAL/.exec(line)||/1STSEGTOTAL/.exec(line)||/1STSEGINUSE/.exec(line)||/1STSEGFREE/.exec(line)||/1STHEAPINUSE/.exec(line)||/1STHEAPFREE/.exec(line)) {
 				var memory = String(lines[i]).replace(/\s\s+/g, ' ');//remove extra spaces
 				if (/\(/.exec(memory)){//1STSEGTOTAL    Total memory:                    46759936 (0x0000000002C98000)
 					memory = / (.*?)( \()/.exec(memory);//everything between the first space and the first parenthesis
