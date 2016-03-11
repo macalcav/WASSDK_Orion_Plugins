@@ -18,15 +18,18 @@
 
 
 window.onload = function() {
+	var editorSelectedText="";
 	var headers = { name: "Search Outline", version: "1.0", description: "View -> Slideout -> Search Outline -- parse file for general overview - macalcav@us.ibm.com - WASSDK" };
-	var provider = new orion.PluginProvider(headers);		
-	var serviceImpl = {
+	var provider = new orion.PluginProvider(headers);
+	
+	var serviceImplOutline = {
     	getOutline: function(contents,title) {
 			return getSearchOutline(contents);    //returns an object outline{label: text, line: number }		
 		}
 	};
 	
-	function getSearchOutline(contents){    		
+	function getSearchOutline(contents){   
+		window.alert("editorSelectedText= "+editorSelectedText);
     	var outline = [];
 		var lines = contents.split(/\r?\n/);
 		var line;
@@ -43,14 +46,35 @@ window.onload = function() {
 		return outline;
 	};
 		
-	var serviceProperties = {
-		contentType: ["text/plain"],
+	var servicePropertiesOutline = {
+		contentType: ["text/plain", "log"],//TO-DO: ["text/plain", "log"]
 	  	name: "Search Outline",
-	  	id: "orion.outline.searchOutline",
-	  	pattern: "*.txt"
-	};		
+	  	id: "orion.outline.searchOutline"
+	};
 	
-	provider.registerServiceProvider("orion.edit.outliner",serviceImpl, serviceProperties);
+	var serviceImplSelectText = {
+	    run: function(selectedText) {
+	    	editorSelectedText = selectedText;
+		}
+	};
+	var servicePropertiesSelectText = {
+		contentType: ["text/plain", "log"],
+	  	name: "HexToDec",
+	  	id: "orion.edit.selectText"
+	};
+	
+	provider.registerServiceProvider("orion.core.contenttype", {}, {
+		contentTypes: [
+			{
+				id: "log",
+				name: "log",
+				extension: ["log"],
+				"extends": "text/plain"
+			}
+	]});
+	provider.registerServiceProvider("orion.edit.command",serviceImplSelectText, servicePropertiesSelectText);
+	
+	provider.registerServiceProvider("orion.edit.outliner",serviceImplOutline, servicePropertiesOutline);
     provider.connect();	
 };
 </script>
