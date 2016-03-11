@@ -19,7 +19,7 @@
 window.onload = function() {
 	var headers = { name: "SystemOut Hang parse", version: "1.0", description: "parse out hang and delay messages - macalcav@us.ibm.com - WASSDK" };
 	var provider = new orion.PluginProvider(headers);		
-	var serviceImpl = {
+	var serviceImplOutline = {
     	getOutline: function(contents,title) {
     		var  systemOutOutline = [];
     		var lines = contents.split("\n");
@@ -236,14 +236,23 @@ function getLastNumberFromString(line){
 	    }  	    
 	};
 	
-	var serviceProperties = {
+	var servicePropertiesOutline = {
 		contentType: ["text/plain"],
-      	name: "SystemOut Hang Parse",
-      	id: "orion.outliner.systemOutHangParse"
-    };	
+		name: "SystemOut Hang Parse",
+		id: "orion.outliner.systemOutHangParse"
+	};	
     	
+	provider.registerServiceProvider("orion.core.contenttype", {}, {
+		contentTypes: [
+			{
+				id: "log",
+				name: "log",
+				extension: ["log"],
+				"extends": "text/plain"
+			}
+	]});
 	
-	provider.registerServiceProvider("orion.edit.outliner",serviceImpl, serviceProperties);
+	provider.registerServiceProvider("orion.edit.outliner",serviceImplOutline, servicePropertiesOutline);
     provider.connect();	
 };
 </script>
