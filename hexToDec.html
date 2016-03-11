@@ -18,7 +18,8 @@ window.onload = function() {
 	var provider = new orion.PluginProvider(headers);		
 	var serviceImpl = {
 	    run: function(hex) {
-	    	return parseInt(hex, 16);
+	    	var hexToDec= parseInt(hex, 16);
+	    	return hex + "=" + hexToDec;
 		}
 	};
 		
