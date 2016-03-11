@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>HexToDec Convert</title>
+<script type="text/javascript" src="utilities/plugin.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+//********************
+//********************
+//INSTRUCTIONS:
+//highlight text to convert then use ctrl+alt+d
+//********************
+//********************
+window.onload = function() {
+	var headers = { name: "Hex to Dec Convert", version: "1.0", description: "TOOLS - convert Hex to Dec (ctrl+alt+d) - macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+	    run: function(hex) {
+	    	return parseInt(hex, 16);
+		}
+	};
+		
+	var serviceProperties = {
+		contentType: ["text/plain"],
+	  	name: "HexToDec",
+	  	id: "orion.edit.HexToDec",
+	  	key : ["d", true, false, true]
+	};		
+	
+	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+</body>
+</html>
