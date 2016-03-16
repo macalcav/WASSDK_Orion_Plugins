@@ -13,23 +13,38 @@
 //********************
 //INSTRUCTIONS:
 //Orion Editor then View-> Slideout -> Search Outline
-//********************
+//********************https://orionhub.org/settings/settings.html
 //********************
 
 
 window.onload = function() {
-	var editorSelectedText="";
+	
 	var headers = { name: "Search Outline", version: "1.0", description: "View -> Slideout -> Search Outline -- parse file for general overview - macalcav@us.ibm.com - WASSDK" };
 	var provider = new orion.PluginProvider(headers);
+    
+    var servicePropertiesContentTypes = {
+		contentTypes: [
+			{
+				id: "log",
+				name: "log",
+				extension: ["log"],
+				"extends": "text/plain"
+			}
+		]
+	};
+;
 	
 	var serviceImplOutline = {
     	getOutline: function(contents,title) {
+    		//window.alert("editorSelectedText: " + window.getSelection())
 			return getSearchOutline(contents);    //returns an object outline{label: text, line: number }		
 		}
 	};
 	
+  
+	
 	function getSearchOutline(contents){   
-		window.alert("editorSelectedText= "+editorSelectedText);
+		//window.alert("editorSelectedText= "+editorSelectedText);
     	var outline = [];
 		var lines = contents.split(/\r?\n/);
 		var line;
@@ -44,36 +59,19 @@ window.onload = function() {
 				//}								
 		}
 		return outline;
+	}
+	
+	var servicePropertiesModel = {
+		contentType: ["text/plain", "log"]
 	};
 		
 	var servicePropertiesOutline = {
-		contentType: ["text/plain", "log"],//TO-DO: ["text/plain", "log"]
+		contentType: ["text/plain", "log"],
 	  	name: "Search Outline",
 	  	id: "orion.outline.searchOutline"
 	};
-	
-	var serviceImplSelectText = {
-	    run: function(selectedText) {
-	    	editorSelectedText=selectedText;
-		}
-	};
-	var servicePropertiesSelectText = {
-		contentType: ["text/plain", "log"],
-	  	name: "SelectText",
-	  	id: "orion.edit.selectText"
-	};
-	
-	provider.registerServiceProvider("orion.core.contenttype", {}, {
-		contentTypes: [
-			{
-				id: "log",
-				name: "log",
-				extension: ["log"],
-				"extends": "text/plain"
-			}
-	]});
-	provider.registerServiceProvider("orion.edit.command",serviceImplSelectText, servicePropertiesSelectText);
-	
+		
+	provider.registerServiceProvider("orion.core.contenttype", {}, servicePropertiesContentTypes);	
 	provider.registerServiceProvider("orion.edit.outliner",serviceImplOutline, servicePropertiesOutline);
     provider.connect();	
 };
