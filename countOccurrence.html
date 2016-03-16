@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Count Occurrence</title>
+<script type="text/javascript" src="utilities/plugin.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+
+//********************
+//********************
+//INSTRUCTIONS:
+//
+//********************
+//********************
+
+
+window.onload = function() {
+	var headers = { name: "Count Occurrence", version: "1.0", description: "TOOLS - Count Occurrence - macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+	    run: function(selectedText, text, selection) {
+			var lines = text.split(/\r?\n/);
+			var line;
+			var count = 0;
+     		for (var i=0; i < lines.length; i++) {
+					line = lines[i];
+					if (line.indexOf(selectedText)>0){
+						count++;								
+					}								
+			}
+			//return count;
+			window.alert("\""+ selectedText + "\" is found " + count + " times.");
+		}
+	};
+		
+	var serviceProperties = {
+		contentType: ["text/plain"],
+	  	name: "Count Occurrence",
+	  	id: "orion.edit.countOccurrence",
+	  	key : [ "c", true, false, true ]
+	};		
+	
+	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+</body>
+</html>

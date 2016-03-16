@@ -21,6 +21,7 @@ window.onload = function() {
 	
 	var headers = { name: "Search Outline", version: "1.0", description: "View -> Slideout -> Search Outline -- parse file for general overview - macalcav@us.ibm.com - WASSDK" };
 	var provider = new orion.PluginProvider(headers);
+	var x ="";
     
     var servicePropertiesContentTypes = {
 		contentTypes: [
@@ -33,18 +34,18 @@ window.onload = function() {
 		]
 	};
 ;
+
+
 	
 	var serviceImplOutline = {
     	getOutline: function(contents,title) {
-    		//window.alert("editorSelectedText: " + window.getSelection())
-			return getSearchOutline(contents);    //returns an object outline{label: text, line: number }		
+    		return getSearchOutline(contents);    //returns an object outline{label: text, line: number }		
 		}
 	};
 	
   
 	
 	function getSearchOutline(contents){   
-		//window.alert("editorSelectedText= "+editorSelectedText);
     	var outline = [];
 		var lines = contents.split(/\r?\n/);
 		var line;
@@ -61,9 +62,6 @@ window.onload = function() {
 		return outline;
 	}
 	
-	var servicePropertiesModel = {
-		contentType: ["text/plain", "log"]
-	};
 		
 	var servicePropertiesOutline = {
 		contentType: ["text/plain", "log"],
