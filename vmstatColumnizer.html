@@ -124,7 +124,7 @@ window.onload = function() {
 		contentType: ["text/plain"],
 	  	name: "Vmstat Columnizer",
 	  	id: "orion.edit.vmstatColumnizer",
-	  	key : [ "v", true ]
+	  	key : [ "v", true, false, true ]//ctrl+alt+v
 	};		
 	
 	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);

@@ -239,7 +239,8 @@ function getLastNumberFromString(line){
 	var servicePropertiesOutline = {
 		contentType: ["text/plain"],
 		name: "SystemOut Hang Parse",
-		id: "orion.outliner.systemOutHangParse"
+		id: "orion.outliner.systemOutHangParse",
+		key : [ "s", true, false, true ]//ctril+alt+s
 	};	
     	
 	provider.registerServiceProvider("orion.core.contenttype", {}, {
