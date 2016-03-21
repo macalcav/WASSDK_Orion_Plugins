@@ -21,7 +21,6 @@ window.onload = function() {
 	
 	var headers = { name: "Search Outline", version: "1.0", description: "View -> Slideout -> Search Outline -- parse file for general overview - macalcav@us.ibm.com - WASSDK" };
 	var provider = new orion.PluginProvider(headers);
-	var x ="";
     
     var servicePropertiesContentTypes = {
 		contentTypes: [
@@ -33,19 +32,26 @@ window.onload = function() {
 			}
 		]
 	};
-;
-
-
 	
 	var serviceImplOutline = {
     	getOutline: function(contents,title) {
-    		return getSearchOutline(contents);    //returns an object outline{label: text, line: number }		
+    		//https://wiki.eclipse.org/Orion/Documentation/Developer_Guide/Plugging_into_the_editor#orion.edit.outliner
+    		//https://blog.abstratt.com/2013/11/01/cloudfier-orion-editor-features/
+    		//https://wiki.eclipse.org/Orion/Documentation/Developer_Guide/Plugging_into_the_editor#Replacing_the_selection
+    		//http://mirror.csclub.uwaterloo.ca/eclipse/orion/jsdoc/symbols/orion.editor.Selection.html
+    		//editorContextObject.getText().then(function(text)
+    		//Object("abc") instanceof String
+    		//var selectedContentsText= contents.getText().then(function(text) {
+    		//	    return text;
+			//});
+			//window.alert("Text: "+ selectedContentsText);
+    		return getSearchOutline(contents);    //returns an object outline{label: text, line: number 		
 		}
-	};
+	};	
 	
   
 	
-	function getSearchOutline(contents){   
+	function getSearchOutline(contents){
     	var outline = [];
 		var lines = contents.split(/\r?\n/);
 		var line;
@@ -66,7 +72,8 @@ window.onload = function() {
 	var servicePropertiesOutline = {
 		contentType: ["text/plain", "log"],
 	  	name: "Search Outline",
-	  	id: "orion.outline.searchOutline"
+	  	id: "orion.outline.searchOutline",
+	  	key : [ "s", true, true, false ]//ctrl+shift+s
 	};
 		
 	provider.registerServiceProvider("orion.core.contenttype", {}, servicePropertiesContentTypes);	
