@@ -30,7 +30,8 @@ window.onload = function() {
 	var serviceProperties = {
 		contentType: ["text/plain"],
 	  	name: "Javacore Summary Outline",
-	  	id: "orion.outliner.javacoreSummaryOutline"
+	  	id: "orion.outliner.javacoreSummaryOutline",
+	  	key : [ "j", true,true,false ]//ctrl+shift+j
 	};		
 	
 	provider.registerServiceProvider("orion.edit.outliner",serviceImpl, serviceProperties);

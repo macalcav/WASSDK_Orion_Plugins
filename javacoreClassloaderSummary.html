@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Javacore Classloader Summary</title>
+<script type="text/javascript" src="utilities/plugin.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+
+//********************
+//********************
+//INSTRUCTIONS:
+//
+//********************
+//********************
+
+
+window.onload = function() {
+	var headers = { name: "Javacore Classloader Summary", version: "1.0", description: "TOOLS - Javacore Classloader Summary- macalcav@us.ibm.com - WASSDK" };
+	var provider = new orion.PluginProvider(headers);		
+	var serviceImpl = {
+	    run: function(selectedText, text, selection) {
+			var lines = text.split(/\r?\n/);
+			var line;
+			var classloaderArray = [];
+			var classloaderSummary;
+     		for (var i=0; i < lines.length; i++) {
+     			line = lines[i];
+				if (/^2CLTEXTCLLOADER\s.+?Loader\s.+?\(/.exec(line)){//2CLTEXTCLLOADER		----st-- Loader sun/reflect/DelegatingClassLoader(0x0000000042B60EE8), Parent *none*(0x0000000000000000)
+					var classloaderName = line.substr(line.indexOf(" Loader ")+8,line.indexOf("(")-line.indexOf(" Loader ")-8);
+					//window.alert(classloaderName);
+					if (classloaderArray.indexOf(classloaderName)===-1){
+						classloaderArray.push(classloaderName);							
+					}	
+				}
+			}
+			classloaderSummary = countClassloaders(text,classloaderArray.sort());
+			return {
+	    	  		     text: classloaderSummary + "\n\n"+text,
+	    	  		selection:{start:0, end:0}
+	    	  	};
+		}
+	};
+	
+	
+		function countClassloaders(text,classloaderArray){
+			var classloaderSummary="Classloader Summary\n===================\n";
+			for (var i=0; i<classloaderArray.length;i++){
+				var classloaderName = classloaderArray[i].replace(/\//g,"\\/");
+				classloaderName = classloaderName.replace(/\$/,"\\$");
+				classloaderName = classloaderName.replace(/\*/,"\\*");
+				var regex = "^2CLTEXTCLLOADER\\s.+?Loader.+?"+classloaderName;//2CLTEXTCLLOADER		----st-- Loader sun/reflect/DelegatingClassLoader(0x0000000042B60EE8), Parent *none*(0x0000000000000000)
+				var re = new RegExp(regex, 'gm');
+				classloaderSummary+= classloaderArray[i]+" " + text.match(re).length + "\n";
+			}
+			return classloaderSummary;
+		};
+
+		
+	var serviceProperties = {
+		contentType: ["text/plain"],
+	  	name: "Javacore Classloader Summary",
+	  	id: "orion.edit.javacoreClassloaderSummary",
+	  	key : [ "l", true, false, true ]//ctrl+alt+l
+	};		
+	
+	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);
+    provider.connect();	
+};
+</script>
+</head>
+<body>
+</body>
+</html>
