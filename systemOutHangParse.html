@@ -172,7 +172,8 @@ window.onload = function() {
 
 
 function timeStamp(line){
-	return line.substr(0,line.indexOf("]")+1);	
+	return /^\[.+?\]/g.exec(line); 
+	//return line.substr(0,line.indexOf("]")+1);	
 }
 
 function infoMessageCode(line){
@@ -244,10 +245,10 @@ function getLastNumberFromString(line){
 	};	
     	
 	provider.registerServiceProvider("orion.core.contenttype", {}, {
-		contentTypes: [
-			{
-				id: "log",
-				name: "log",
+  	contentTypes: [
+		{
+				id: "text/log",
+				name: "Log File",
 				extension: ["log"],
 				"extends": "text/plain"
 			}
