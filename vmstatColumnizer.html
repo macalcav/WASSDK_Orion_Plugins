@@ -125,10 +125,20 @@ window.onload = function() {
 	  	name: "Vmstat Columnizer",
 	  	id: "orion.edit.vmstatColumnizer",
 	  	key : [ "v", true, false, true ]//ctrl+alt+v
-	};		
+	};
+	
+        provider.registerServiceProvider("orion.core.contenttype", {}, {
+  	contentTypes: [
+		{
+			id: "text/log",
+			name: "Out File",
+			extension: ["out"],
+			"extends": "text/plain"
+		}
+	]});
 	
 	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);
-    provider.connect();	
+        provider.connect();	
 };
 </script>
 </head>
