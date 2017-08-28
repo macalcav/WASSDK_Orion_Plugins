@@ -17,7 +17,7 @@
 //********************
 window.onload = function() {
 	var provider = new orion.PluginProvider();
-    provider.registerServiceProvider("orion.edit.command", {
+    provider.registerService("orion.edit.command", {
        run : function(text) {
          return getDecToGb(text);
        }
@@ -25,11 +25,11 @@ window.onload = function() {
      {
        contentType: ["text/plain"],	
        name : "DecToGb",
-       id : "orion.edit.decToGb",
+       id : "orion.edit.NumberConversion.decToGb",
        key : [ "g", true, false, true ]//ctril+alt+g
      });
 	
-     provider.registerServiceProvider("orion.edit.command", {
+     provider.registerService("orion.edit.command", {
        run : function(text) {
          return getDecToHex(text);
        }
@@ -37,7 +37,7 @@ window.onload = function() {
      {
        contentType: ["text/plain"],
        name : "DecToHex",
-       id : "orion.edit.decToHex",
+       id : "orion.edit.NumberConversion.decToHex",
        key : [ "h", true, false, true ]//ctril+alt+h
      });
      
