@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Number Conversions</title>
+<script type="text/javascript" src="utilities/plugin.js"></script>
+<script type="text/javascript" src="utilities/decToGb.js"></script>
+<script type="text/javascript" src="utilities/decToHex.js"></script>
+<script>
+/*eslint-env browser, amd*/
+/*global orion*/	
+//********************
+//********************
+//INSTRUCTIONS:
+//highlight text to convert
+//********************
+//********************
+window.onload = function() {
+	var provider = new orion.PluginProvider();
+    provider.registerService("orion.edit.command", {
+       run : function(text) {
+         return getDecToGb(text);
+       }
+     }, 
+     {
+       contentType: ["text/plain"],	
+       name : "DecToGb",
+       id : "orion.edit.decToGb",
+       key : [ "g", true, false, true ]//ctril+alt+g
+     });
+	
+     provider.registerService("orion.edit.command", {
+       run : function(text) {
+         return getDecToHex(text);
+       }
+     }, 
+     {
+       contentType: ["text/plain"],
+       name : "DecToHex",
+       id : "orion.edit.decToHex",
+       key : [ "h", true, false, true ]//ctril+alt+h
+     });
+     
+     provider.connect();
+};
+</script>
+</head>
+<body>
+</body>
+</html>
