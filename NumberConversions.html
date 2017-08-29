@@ -16,16 +16,24 @@
 //********************
 //********************
 window.onload = function() {
-	var provider = new orion.PluginProvider();
+    var header = { name: "Server Side Editor - Number Conversion Commands", version: "1.0", description: "number conversion commands" };
+    var provider = new orion.PluginProvider(header);
+	
+    provider.registerServiceProvider("orion.edit.command.category", {}, { 
+      id : "com.ibm.isa.sse.conversion.commands", 
+      name: "SSE Number Conversion Commands",
+      tooltip : "SSE Number Conversion Commands"
+    });
+	
     provider.registerService("orion.edit.command", {
        run : function(text) {
          return getDecToGb(text);
        }
      }, 
-     {
-       contentType: ["text/plain"],	
+     {	
        name : "DecToGb",
-       id : "orion.edit.NumberConversion.decToGb",
+       id : "com.ibm.isa.sse.conversion.commands.decToGb",
+       parentPath : "com.ibm.isa.sse.conversion.commands",
        key : [ "g", true, false, true ]//ctril+alt+g
      });
 	
@@ -35,9 +43,9 @@ window.onload = function() {
        }
      }, 
      {
-       contentType: ["text/plain"],
        name : "DecToHex",
-       id : "orion.edit.NumberConversion.decToHex",
+       id : "com.ibm.isa.sse.conversion.commands.decToHex",
+       parentPath : "com.ibm.isa.sse.conversion.commands",
        key : [ "h", true, false, true ]//ctril+alt+h
      });
      
