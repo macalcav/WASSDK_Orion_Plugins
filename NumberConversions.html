@@ -25,7 +25,7 @@ window.onload = function() {
       tooltip : "SSE Number Conversion Commands"
     });
 	
-    provider.registerService("orion.edit.command", {
+    provider.registerServiceProvider("orion.edit.command", {
        run : function(text) {
          return getDecToGb(text);
        }
@@ -37,7 +37,7 @@ window.onload = function() {
        key : [ "g", true, false, true ]//ctril+alt+g
      });
 	
-     provider.registerService("orion.edit.command", {
+     provider.registerServiceProvider("orion.edit.command", {
        run : function(text) {
          return getDecToHex(text);
        }
