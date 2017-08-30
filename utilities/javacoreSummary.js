@@ -434,8 +434,10 @@ function getJavacoreSummaryText(text){
 				summary+=("\n"+	lines[i].substr(lines[i].indexOf("Entitled")));
 				continue;
 			}				
-			if (/2CIPHYSCPU/.exec(line)||/2CIONLNCPU/.exec(line)||/2CIBOUNDCPU/.exec(line)||/2CIENTITLECPU/.exec(line)||/2CITARGETCPU/.exec(line)) {//2CIPHYSCPU     Physical CPUs: 6
-				summary+=("\n"+	lines[i].substr(lines[i].indexOf("CPU  ")));
+			if (/2CIPHYSCPU/.exec(line)||/2CIONLNCPU/.exec(line)||/2CIBOUNDCPU/.exec(line)||/2CIENTITLECPU/.exec(line)||/2CITARGETCPU/.exec(line)) {
+				//2CIPHYSCPU     Physical CPUs: 6
+				var cpu = lines[i].substr(lines[i].indexOf("CPU  ")+3).trim();
+				summary+=("\n"+ cpu);
 				continue;
 			}
 			if (/1CIUSERLIMITS/.exec(line)) {//1CIUSERLIMITS  User Limits (in bytes except for NOFILE and NPROC)
