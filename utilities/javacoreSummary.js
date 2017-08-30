@@ -340,7 +340,7 @@ function getJavacoreSummaryText(text){
 			line = lines[i];
 			if (/1CIPROCESSID /.exec(line)) {//1CIPROCESSID   Process ID: 30914 (0x78C2)
 				var pid = line.substring(line.indexOf("Process ID"));
-				summary+=("\n"+"PID: "+ pid);	  
+				summary+=("\n"+ pid);	  
 				break;
 			}
 		}
@@ -348,8 +348,8 @@ function getJavacoreSummaryText(text){
 	        for (i=0; i < lines.length; i++) {
 			line = lines[i];
 			if (/2CIENVVAR      HOSTNAME/.exec(line)) {//2CIENVVAR      HOSTNAME=MYHOST
-				var pid = line.substring(line.indexOf("HOSTNAME"));
-				summary+=("\n"+"PID: "+ pid);	  
+				var hostName = line.substring(line.indexOf("HOSTNAME"));
+				summary+=("\n"+ hostName);	  
 				break;
 			}
 		}	
