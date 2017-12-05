@@ -6,6 +6,13 @@
 <script type="text/javascript" src="utilities/plugin.js"></script>
 <script type="text/javascript" src="utilities/decToGb.js"></script>
 <script type="text/javascript" src="utilities/decToHex.js"></script>
+<script type="text/javascript" src="utilities/decToMb.js"></script>
+<script type="text/javascript" src="utilities/hexToDec.js"></script>
+<script type="text/javascript" src="utilities/hexToGb.js"></script>
+<script type="text/javascript" src="utilities/hexToMb.js"></script>
+<script type="text/javascript" src="utilities/kbToGb.js"></script>
+<script type="text/javascript" src="utilities/msToTime.js"></script>
+<script type="text/javascript" src="utilities/calculate.js"></script>
 <script>
 /*eslint-env browser, amd*/
 /*global orion*/	
@@ -19,12 +26,14 @@ window.onload = function() {
     var header = { name: "Server Side Editor - Number Conversion Commands", version: "1.0", description: "number conversion commands" };
     var provider = new orion.PluginProvider(header);
 	
+	//Menu Item "SSE Number Conversion Commands"
     provider.registerServiceProvider("orion.edit.command.category", {}, { 
       id : "com.ibm.isa.sse.conversion.commands", 
       name: "SSE Number Conversion Commands",
       tooltip : "SSE Number Conversion Commands"
     });
 	
+	//DecToGb
     provider.registerServiceProvider("orion.edit.command", {
        run : function(text) {
          return getDecToGb(text);
@@ -37,6 +46,7 @@ window.onload = function() {
        key : [ "g", true, false, true ]//ctril+alt+g
      });
 	
+	//SSE Number Conversion Commands->DecToHex
      provider.registerServiceProvider("orion.edit.command", {
        run : function(text) {
          return getDecToHex(text);
@@ -47,6 +57,97 @@ window.onload = function() {
        id : "com.ibm.isa.sse.conversion.commands.decToHex",
        parentPath : "com.ibm.isa.sse.conversion.commands",
        key : [ "h", true, false, true ]//ctril+alt+h
+     });
+     
+     //SSE Number Conversion Commands->DecToMb
+     provider.registerServiceProvider("orion.edit.command", {
+       run : function(text) {
+         return getDecToMb(text);
+       }
+     }, 
+     {
+       name : "DecToMb",
+       id : "com.ibm.isa.sse.conversion.commands.decToMb",
+       parentPath : "com.ibm.isa.sse.conversion.commands",
+       key : [ "m", true, false, true ]//ctril+alt+m
+     });
+     
+     //SSE Number Conversion Commands->HexToDec
+     provider.registerServiceProvider("orion.edit.command", {
+       run : function(text) {
+         return getHexToDec(text);
+       }
+     }, 
+     {
+       name : "HexToDec",
+       id : "com.ibm.isa.sse.conversion.commands.hexToDec",
+       parentPath : "com.ibm.isa.sse.conversion.commands",
+       key : [ "d", true, false, true ]//ctril+alt+d
+     });
+     
+     //SSE Number Conversion Commands->HexToGb
+     provider.registerServiceProvider("orion.edit.command", {
+       run : function(text) {
+         return getHexToGb(text);
+       }
+     }, 
+     {
+       name : "HexToGb",
+       id : "com.ibm.isa.sse.conversion.commands.hexToGb",
+       parentPath : "com.ibm.isa.sse.conversion.commands",
+       key : [ "x", true, false, true ]//ctril+alt+x
+     });
+     
+     //SSE Number Conversion Commands->HexToMb
+     provider.registerServiceProvider("orion.edit.command", {
+       run : function(text) {
+         return getHexToMb(text);
+       }
+     }, 
+     {
+       name : "HexToMb",
+       id : "com.ibm.isa.sse.conversion.commands.hexToMb",
+       parentPath : "com.ibm.isa.sse.conversion.commands",
+       key : [ "b", true, false, true ]//ctril+alt+b
+     });
+     
+     //SSE Number Conversion Commands->KbToGb
+     provider.registerServiceProvider("orion.edit.command", {
+       run : function(text) {
+         return getHexToMb(text);
+       }
+     }, 
+     {
+       name : "KbToGb",
+       id : "com.ibm.isa.sse.conversion.commands.kbToGb",
+       parentPath : "com.ibm.isa.sse.conversion.commands",
+       key : [ "k", true, false, true ]//ctril+alt+k
+     });
+     
+     //SSE Number Conversion Commands->MsToTime
+     provider.registerServiceProvider("orion.edit.command", {
+       run : function(text) {
+         return getMsToTime(text);
+       }
+     }, 
+     {
+       name : "MsToTime",
+       id : "com.ibm.isa.sse.conversion.commands.msToTime",
+       parentPath : "com.ibm.isa.sse.conversion.commands",
+       key : [ "t", true, false, true ]//ctril+alt+t
+     });
+     
+     //SSE Number Conversion Commands->Calculate
+     provider.registerServiceProvider("orion.edit.command", {
+       run : function(text) {
+         return getCalculate(text);
+       }
+     }, 
+     {
+       name : "Calculate",
+       id : "com.ibm.isa.sse.conversion.commands.calculate",
+       parentPath : "com.ibm.isa.sse.conversion.commands",
+       key : [ "c", true, false, true ]//ctril+alt+c
      });
      
      provider.connect();
