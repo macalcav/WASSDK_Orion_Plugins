@@ -1,3 +1,3 @@
 function getDecToHex(dec) {
-	return dec +"="+ dec.toString(16);
+	return dec +"="+ parseFloat(dec).toString(16);
 }
