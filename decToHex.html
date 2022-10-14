@@ -18,7 +18,7 @@
 
 window.onload = function() {
 	var headers = { name: "Dec to Hex Convert", version: "1.0", description: "TOOLS - convert dec to Hex - macalcav@us.ibm.com - WASSDK" };
-	var provider = new eclipse.PluginProvider(headers);		
+	var provider = new eclipse.PluginProvider();		
 	var serviceImpl = {
 	    run: function(dec) {
 	    	return dec.toString(16);
