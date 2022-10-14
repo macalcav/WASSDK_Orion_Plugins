@@ -6,7 +6,7 @@
 <script type="text/javascript" src="utilities/plugin.js"></script>
 <script>
 /*eslint-env browser, amd*/
-/*global orion*/	
+/*global eclipse*/	
 
 //********************
 //********************
@@ -18,7 +18,7 @@
 
 window.onload = function() {
 	var headers = { name: "Dec to Hex Convert", version: "1.0", description: "TOOLS - convert dec to Hex - macalcav@us.ibm.com - WASSDK" };
-	var provider = new orion.PluginProvider(headers);		
+	var provider = new eclipse.PluginProvider(headers);		
 	var serviceImpl = {
 	    run: function(dec) {
 	    	return dec.toString(16);
@@ -33,7 +33,7 @@ window.onload = function() {
 	};		
 	
 	provider.registerServiceProvider("orion.edit.command",serviceImpl, serviceProperties);
-    provider.connect();	
+        provider.connect();	
 };
 </script>
 </head>
